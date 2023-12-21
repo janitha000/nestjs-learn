@@ -11,6 +11,7 @@ import {
   Header,
   Res,
   HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import { HomeService } from './home.service';
 import { CreateHomeDto } from './dto/create-home.dto';
@@ -55,5 +56,20 @@ export class HomeController {
       id,
       houseId,
     };
+  }
+
+  @Get('/exception/throw')
+  throwException() {
+    throw new HttpException(
+      {
+        status: HttpStatus.FORBIDDEN,
+        message: 'This is a custom error',
+      },
+      HttpStatus.FORBIDDEN,
+
+      {
+        cause: 'This is a custom cause',
+      },
+    );
   }
 }
