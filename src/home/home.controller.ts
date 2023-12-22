@@ -12,13 +12,17 @@ import {
   Res,
   HttpStatus,
   HttpException,
+  UseGuards,
 } from '@nestjs/common';
 import { HomeService } from './home.service';
 import { CreateHomeDto } from './dto/create-home.dto';
 import { UpdateHomeDto } from './dto/update-home.dto';
 import { Request, Response } from 'express';
+import { AuthGuard } from 'src/guard/auth.guard';
+import { Roles } from 'src/decorator/role.decorator';
 
 @Controller('home')
+@UseGuards(AuthGuard)
 export class HomeController {
   constructor(private readonly homeService: HomeService) {}
 
@@ -36,6 +40,7 @@ export class HomeController {
   @Get(':id')
   @Header('Cache-Control', 'none')
   @Header('X-Custom-Header', 'Janitha Tennakoon')
+  @Roles(['Admin'])
   findOne(@Param('id') id: string, @Query('name') name: string) {
     return this.homeService.findOne(+id, name);
   }
