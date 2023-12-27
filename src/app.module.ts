@@ -11,6 +11,7 @@ import { LoggerMiddleware } from './middleware/log.middleware';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformInterceptor } from './interceptor/transform.interceptor';
 import { ConfigModule } from '@nestjs/config';
+import { DynamicConfigModule } from './configs/dynamic.config,module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ConfigModule } from '@nestjs/config';
     ConfigModule.forRoot({
       cache: true,
     }),
+    DynamicConfigModule.register({ folder: './src/configs' }),
   ],
   controllers: [AppController],
   providers: [
