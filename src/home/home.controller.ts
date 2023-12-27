@@ -13,6 +13,7 @@ import {
   HttpStatus,
   HttpException,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { HomeService } from './home.service';
 import { CreateHomeDto } from './dto/create-home.dto';
@@ -20,9 +21,11 @@ import { UpdateHomeDto } from './dto/update-home.dto';
 import { Request, Response } from 'express';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { Roles } from 'src/decorator/role.decorator';
+import { TimeLoggerInterceptor } from 'src/interceptor/time.logger.interceptor';
 
 @Controller('home')
 @UseGuards(AuthGuard)
+@UseInterceptors(TimeLoggerInterceptor)
 export class HomeController {
   constructor(private readonly homeService: HomeService) {}
 
