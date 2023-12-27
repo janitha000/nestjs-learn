@@ -8,11 +8,25 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HomeModule } from './home/home.module';
 import { LoggerMiddleware } from './middleware/log.middleware';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { TransformInterceptor } from './interceptor/transform.interceptor';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [HomeModule],
+  imports: [
+    HomeModule,
+    ConfigModule.forRoot({
+      cache: true,
+    }),
+  ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

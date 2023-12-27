@@ -14,6 +14,7 @@ import {
   HttpException,
   UseGuards,
   UseInterceptors,
+  Inject,
 } from '@nestjs/common';
 import { HomeService } from './home.service';
 import { CreateHomeDto } from './dto/create-home.dto';
@@ -22,12 +23,18 @@ import { Request, Response } from 'express';
 import { AuthGuard } from 'src/guard/auth.guard';
 import { Roles } from 'src/decorator/role.decorator';
 import { TimeLoggerInterceptor } from 'src/interceptor/time.logger.interceptor';
+import { Connection } from 'src/services/conntection';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('home')
 @UseGuards(AuthGuard)
 @UseInterceptors(TimeLoggerInterceptor)
 export class HomeController {
-  constructor(private readonly homeService: HomeService) {}
+  constructor(
+    private readonly homeService: HomeService,
+    @Inject('CONNECTION') connection: Connection,
+    private configService: ConfigService,
+  ) {}
 
   @Post()
   create(@Body() createHomeDto: CreateHomeDto) {
@@ -63,6 +70,7 @@ export class HomeController {
     return {
       id,
       houseId,
+      NAME: this.configService.get<string>('NAME'),
     };
   }
 
